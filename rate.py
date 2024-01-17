@@ -1,8 +1,12 @@
 import datetime
 import requests
+import time
 import matplotlib.pyplot as plt
 usernames = input("ユーザー名をカンマ区切りで入力してください:").split(",")
-users = {uname : requests.get("https://atcoder.jp/users/"+uname+"/history/json").json() for uname in usernames}
+users = {}
+for uname in usernames:
+    users[uname] = requests.get("https://atcoder.jp/users/"+uname+"/history/json").json()
+    time.sleep(1)
 user_rates = {uname : [users[uname][i]["NewRating"] for i in range(len(users[uname]))] for uname in usernames}
 user_times = {uname : [datetime.datetime.strptime((users[uname][i]["EndTime"]).split("T")[0], '%Y-%m-%d')  for i in range(len(users[uname]))] for uname in usernames}
 plt.figure()
